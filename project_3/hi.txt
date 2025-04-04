@@ -1,0 +1,3 @@
+ls
+ls& cat help.txt
+man cat
