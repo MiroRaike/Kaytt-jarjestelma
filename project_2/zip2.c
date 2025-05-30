@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]){
-    if(argc < 2){
+    if(argc < 3){
         printf("my-zip: searchterm [file ...]\n");
         exit(1);
     }
@@ -12,18 +12,21 @@ int main(int argc, char* argv[]){
         exit(1);
     }
 
+    FILE *compressed;
+
+    compressed = fopen(argv[2], "wb");
+
     int ch;
     int last_ch = 0;
-    long count = 0;
+    int count = 0;
 
     while ((ch = fgetc(fp)) != EOF){
-        //printf("%d\n", ch);
         if(last_ch == 0){;
             last_ch = ch;
         }
         if(ch != last_ch){
-            fwrite(&count, sizeof(long), 1, stdout);
-            fwrite(&last_ch, 1, 1, stdout);
+            fwrite(&count, sizeof(int), 1, compressed);
+            fwrite(&last_ch, 1, 1, compressed);
             count = 0;
         }
 
@@ -69,6 +72,8 @@ int main(int argc, char* argv[]){
                 fwrite(binaryChar[i], sizeof binaryChar[i], 1, compressed);
             }*/
     }
+    printf("Finished writing zip\n");
     fclose(fp);
+    fclose(compressed);
     return 0;
 }

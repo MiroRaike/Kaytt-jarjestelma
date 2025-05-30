@@ -22,7 +22,7 @@ int main(int argc, char* argv[]){
             last_ch = ch;
         }
         if(ch != last_ch){
-            fwrite(&count, sizeof(long), 1, stdout);
+            fwrite(&count, sizeof(int), 1, stdout);
             fwrite(&last_ch, 1, 1, stdout);
             count = 0;
         }
@@ -69,6 +69,8 @@ int main(int argc, char* argv[]){
                 fwrite(binaryChar[i], sizeof binaryChar[i], 1, compressed);
             }*/
     }
+    fwrite(&count, sizeof(long), 1, stdout);
+    fwrite(&last_ch, 1, 1, stdout);
     fclose(fp);
     return 0;
 }
