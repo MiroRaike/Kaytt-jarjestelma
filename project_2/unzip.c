@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 int main(int argc, char* argv[]){
-    if(argc < 3){
+    if(argc < 2){
         printf("my-zip: searchterm [file ...]\n");
         exit(1);
     }
@@ -19,19 +19,13 @@ int main(int argc, char* argv[]){
     size = ftell(fp);
     // 
     fseek(fp, 0, SEEK_SET);
-    printf("%d size is this \n",size);
     if((size % 5) != 0){
-        printf("size isn't divicible by 5, zipped file is corrupted\n");
-        exit(1);
+        printf("size isn't divicible by 5, zipped file might be corrupted\n");
     }
 
     size = size / 5;
 
-    FILE *uncompressed;
-
-    uncompressed = fopen(argv[2], "w");
-
-    int loops;
+    int loops = 0;
     int binCharacter;
 
     for(int i=0;i<size;i++){
@@ -39,17 +33,21 @@ int main(int argc, char* argv[]){
             printf("Error reading file");
             exit(1);
         };
+        if(loops > 10000){
+            printf("Too many loops, file is probably corrupted\n");
+            exit(1);
+        }
+
         if((fread(&binCharacter, 1, 1, fp)!=1)){
             printf("Error reading file");
+            exit(1);
         };
         for(int x=0;x<loops;x++){
-            fprintf(uncompressed,"%c",binCharacter);
+            printf("%c",binCharacter);
         }
     }
 
-    
-    printf("Finished unzip:ing file\n");
+    printf("\nFinished unzip:ing file\n");
     fclose(fp);
-    fclose(uncompressed);
     return 0;
 }
